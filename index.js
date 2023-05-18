@@ -2,6 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -39,6 +40,18 @@ async function run() {
       const toyData = req.body;
       const result = await toysCollection.insertOne(toyData);
       res.send(result);
+    });
+
+    /* -------------------------------------------------------
+      !--------------------- JWT TOKEN GENERATOR ------------------!
+      ------------------------------------------------------------ */
+    app.post("/generate-jwt-token", (req, res) => {
+      const data = req.body;
+      const token = jwt.sign(data, process.env.JWT_SECRET_KEY, {
+        algorithm: "HS384",
+        expiresIn: "1h",
+      });
+      res.send({ token: token });
     });
 
     // Send a ping to confirm a successful connection

@@ -74,11 +74,12 @@ async function run() {
       !------------------| GIT TOYS CUSTOM PES |-------------------
     ----------------------------------------------------------------- */
     app.get("/toys", async (req, res) => {
-      const { page, limit } = req.query;
-      const skip = parseInt(page) * parseInt(limit);
+      const page = parseInt(req.query.page) || 0;
+      const limit = parseInt(req.query.limit) || 20;
+      const skip = page * limit;
       const result = await toysCollection
         .find()
-        .limit(parseInt(limit))
+        .limit(limit)
         .skip(skip)
         .toArray();
       res.send(result);

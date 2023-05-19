@@ -12,6 +12,9 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+/* -------------------------------------------------------------
+  !------------------| JWT TOKEN VERIFIER | -------------------
+------------------------------------------------------------------ */
 const verifyToken = (req, res, next) => {
   const authorization = req.headers.authorization;
   if (!authorization) {
@@ -55,12 +58,12 @@ async function run() {
     client.connect();
 
     /* ---------------------------------------------
-      !-------------------- collection --------------
+      !--------------------| COLLECTION | --------------
   ------------------------------------------------------- */
     const toysCollection = client.db("toyMaster").collection("toys");
 
     /* -------------------------------------------------------
-    ! ------------------- ADD A TOY -------------------------
+    ! -------------------| ADD A TOY | -------------------------
     ----------------------------------------------------------- */
     app.post("/add-toy", async (req, res) => {
       const toyData = req.body;
@@ -69,8 +72,8 @@ async function run() {
     });
 
     /* -------------------------------------------------------------------
-        !-------------------- | get my toys | ----------------------------
-        ------------------------------------------------------------------ */
+        !-------------------- | GET MY TOYS | ----------------------------
+      ------------------------------------------------------------------ */
     app.get("/my-toys", verifyToken, async (req, res) => {
       const email = req.query.email;
       const decoded = req.decoded;
@@ -86,13 +89,33 @@ async function run() {
     });
 
     /* -----------------------------------------------------------------------------
-        !---------------------- remove a toy ---------------------------- 
+        !---------------------- | REMOVE A TOY | ---------------------------- 
         --------------------------------------------------------------------------- */
     app.delete("/remove-toy/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       console.log(query);
       const result = await toysCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    /* ------------------------------------------------------------------------------
+      !---------------------------| UPDATE A TOY | -----------------------------
+    -------------------------------------------------------------------------------- */
+    app.patch("/update-toy/:id", async (req, res) => {
+      const id = req.params.id;
+      const data = req.body;
+      const query = { _id: new ObjectId(id) };
+
+      const updateInfo = {
+        $set: {
+          price: data.price,
+          quantity: data.quantity,
+          rating: data.rating,
+          details: data.details,
+        },
+      };
+      const result = await toysCollection.updateOne(query, updateInfo);
       res.send(result);
     });
 

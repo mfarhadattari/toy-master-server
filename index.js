@@ -29,7 +29,9 @@ const verifyToken = (req, res, next) => {
 
   jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
     if (err) {
-      return res.send(err);
+      return res
+        .status(403)
+        .send({ error: true, message: "User Token Expired" });
     }
     req.decoded = decoded;
     next();

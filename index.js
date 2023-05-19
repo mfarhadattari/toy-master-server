@@ -62,6 +62,14 @@ async function run() {
   ------------------------------------------------------- */
     const toysCollection = client.db("toyMaster").collection("toys");
 
+    /* ------------------------------------------------------
+    !------------------| TOYS NUMBERS |-----------------------
+    ------------------------------------------------------------ */
+    app.get("/total-toys", async (req, res) => {
+      const result = await toysCollection.estimatedDocumentCount();
+      res.send({ totalToys: result });
+    });
+
     /* -------------------------------------------------------
     ! -------------------| ADD A TOY | -------------------------
     ----------------------------------------------------------- */
@@ -94,7 +102,6 @@ async function run() {
     app.delete("/remove-toy/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      console.log(query);
       const result = await toysCollection.deleteOne(query);
       res.send(result);
     });

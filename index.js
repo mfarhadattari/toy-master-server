@@ -2,7 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const jwt = require("jsonwebtoken");
 
 const app = express();
@@ -84,6 +84,18 @@ async function run() {
       const result = await toysCollection.find(filter).toArray();
       res.send(result);
     });
+
+    /* -----------------------------------------------------------------------------
+        !---------------------- remove a toy ---------------------------- 
+        --------------------------------------------------------------------------- */
+    app.delete("/remove-toy/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      console.log(query);
+      const result = await toysCollection.deleteOne(query);
+      res.send(result);
+    });
+
     /* -------------------------------------------------------
       !--------------------- JWT TOKEN GENERATOR ------------------!
       ------------------------------------------------------------ */

@@ -70,6 +70,20 @@ async function run() {
       res.send({ totalToys: result });
     });
 
+    /* -------------------------------------------------------------
+      !------------------| GIT TOYS CUSTOM PES |-------------------
+    ----------------------------------------------------------------- */
+    app.get("/toys", async (req, res) => {
+      const { page, limit } = req.query;
+      const skip = parseInt(page) * parseInt(limit);
+      const result = await toysCollection
+        .find()
+        .limit(parseInt(limit))
+        .skip(skip)
+        .toArray();
+      res.send(result);
+    });
+
     /* -------------------------------------------------------
     ! -------------------| ADD A TOY | -------------------------
     ----------------------------------------------------------- */

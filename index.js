@@ -61,6 +61,9 @@ async function run() {
       !--------------------| COLLECTION | --------------
   ------------------------------------------------------- */
     const toysCollection = client.db("toyMaster").collection("toys");
+    const categoriesCollection = client
+      .db("toyMaster")
+      .collection("categories");
 
     /* ------------------------------------------------------
     !------------------| TOYS NUMBERS |-----------------------
@@ -82,6 +85,14 @@ async function run() {
         .limit(limit)
         .skip(skip)
         .toArray();
+      res.send(result);
+    });
+
+    /* -------------------------------------------------------------
+      ! --------------------| GET CATEGORIES ---------------------
+      ------------------------------------------------------------ */
+    app.get("/categories", async (req, res) => {
+      const result = await categoriesCollection.find().toArray();
       res.send(result);
     });
 

@@ -74,6 +74,14 @@ async function run() {
     });
 
     /* -------------------------------------------------------------
+      ! --------------------| GET CATEGORIES |---------------------
+      ------------------------------------------------------------ */
+    app.get("/categories", async (req, res) => {
+      const result = await categoriesCollection.find().toArray();
+      res.send(result);
+    });
+
+    /* -------------------------------------------------------------
       !------------------| GIT TOYS CUSTOM PES |-------------------
     ----------------------------------------------------------------- */
     app.get("/toys", async (req, res) => {
@@ -88,11 +96,13 @@ async function run() {
       res.send(result);
     });
 
-    /* -------------------------------------------------------------
-      ! --------------------| GET CATEGORIES ---------------------
-      ------------------------------------------------------------ */
-    app.get("/categories", async (req, res) => {
-      const result = await categoriesCollection.find().toArray();
+    /* ------------------------------------------------------------------
+    ! -------------------| GET TOYS BY CATEGORY | ---------------
+    --------------------------------------------------------------------- */
+    app.get("/toys-by-category", async (req, res) => {
+      const category = req.query.category;
+      const query = { category: category };
+      const result = await toysCollection.find(query).toArray();
       res.send(result);
     });
 

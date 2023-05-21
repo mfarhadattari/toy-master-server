@@ -64,6 +64,7 @@ async function run() {
     const categoriesCollection = client
       .db("toyMaster")
       .collection("categories");
+    const blogsCollection = client.db("toyMaster").collection("blogs");
 
     /* ------------------------------------------------------
     !------------------| TOYS NUMBERS |-----------------------
@@ -213,6 +214,14 @@ async function run() {
       const regexPattern = new RegExp(search, "i");
       const query = { name: { $regex: regexPattern } };
       const result = await toysCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    /* ------------------------------------------------------------------
+    !----------------------------- | BLOGS |----------------------------
+    -------------------------------------------------------------------- */
+    app.get("/blogs", async (req, res) => {
+      const result = await blogsCollection.find().toArray();
       res.send(result);
     });
 

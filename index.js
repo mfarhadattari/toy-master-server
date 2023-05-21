@@ -133,10 +133,12 @@ async function run() {
     });
 
     /* -------------------------------------------------------------------
-        !-------------------- | GET MY TOYS | ----------------------------
+      !---------- | GET MY TOYS BY NONE SORTING AND SORTING | -----------
       ------------------------------------------------------------------ */
     app.get("/my-toys", verifyToken, async (req, res) => {
       const email = req.query.email;
+      const sortBy = req.query.sortBy || "None";
+
       const decoded = req.decoded;
       if (!decoded.email === email) {
         return res
@@ -145,8 +147,22 @@ async function run() {
       }
 
       const filter = { email: email };
-      const result = await toysCollection.find(filter).toArray();
-      res.send(result);
+      if (sortBy == "Descending (price)") {
+        const result = await toysCollection
+          .find(filter)
+          .sort({ price: -1 })
+          .toArray();
+        res.send(result);
+      } else if (sortBy === "Ascending (price)") {
+        const result = await toysCollection
+          .find(filter)
+          .sort({ price: 1 })
+          .toArray();
+        res.send(result);
+      } else {
+        const result = await toysCollection.find(filter).toArray();
+        res.send(result);
+      }
     });
 
     /* -----------------------------------------------------------------------------
@@ -190,7 +206,7 @@ async function run() {
     });
 
     /* ------------------------------------------------------------------------
-      !--------------------| Search Toy by name or  keyword or letter | ------------------------ 
+      !-----------------| SEARCH TOY BY NAME OR  KEYWORD OR LETTER | ----------- 
     ------------------------------------------------------------------------*/
     app.get("/search-toy", async (req, res) => {
       const search = req.query.search;

@@ -73,6 +73,16 @@ async function run() {
       res.send({ totalToys: result });
     });
 
+    /* -----------------------------------------------------------
+    !---------------------| GET TOYS NUMBER BY CATEGORY | --------
+    -------------------------------------------------------------- */
+    app.get("/category-toys/:category", async (req, res) => {
+      const category = req.params.category;
+      const filter = { category: category };
+      const result = await toysCollection.countDocuments(filter);
+      res.send({ total: result });
+    });
+
     /* -------------------------------------------------------------
       ! --------------------| GET CATEGORIES |---------------------
       ------------------------------------------------------------ */

@@ -189,6 +189,17 @@ async function run() {
       res.send(result);
     });
 
+    /* ------------------------------------------------------------------------
+      !--------------------| Search Toy by name or  keyword or letter | ------------------------ 
+    ------------------------------------------------------------------------*/
+    app.get("/search-toy", async (req, res) => {
+      const search = req.query.search;
+      const regexPattern = new RegExp(search, "i");
+      const query = { name: { $regex: regexPattern } };
+      const result = await toysCollection.find(query).toArray();
+      res.send(result);
+    });
+
     /* -------------------------------------------------------
       !--------------------- JWT TOKEN GENERATOR ------------------!
       ------------------------------------------------------------ */

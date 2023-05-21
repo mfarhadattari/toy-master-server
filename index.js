@@ -65,6 +65,9 @@ async function run() {
       .db("toyMaster")
       .collection("categories");
     const blogsCollection = client.db("toyMaster").collection("blogs");
+    const userReviewsCollection = client
+      .db("toyMaster")
+      .collection("userReviews");
 
     /* ------------------------------------------------------
     !------------------| TOYS NUMBERS |-----------------------
@@ -222,6 +225,14 @@ async function run() {
     -------------------------------------------------------------------- */
     app.get("/blogs", async (req, res) => {
       const result = await blogsCollection.find().toArray();
+      res.send(result);
+    });
+
+    /* ---------------------------------------------------------------------
+    !------------------------ | User Reviews | ----------------------------
+    ------------------------------------------------------------------------- */
+    app.get("/user-reviews", async (req, res) => {
+      const result = await userReviewsCollection.find().toArray();
       res.send(result);
     });
 

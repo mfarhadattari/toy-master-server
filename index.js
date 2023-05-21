@@ -92,7 +92,7 @@ async function run() {
     });
 
     /* -------------------------------------------------------------
-      !------------------| GIT TOYS CUSTOM PES |-------------------
+      !------------------| GIT TOYS  |-------------------
     ----------------------------------------------------------------- */
     app.get("/toys", async (req, res) => {
       const page = parseInt(req.query.page) || 0;
@@ -109,10 +109,17 @@ async function run() {
     /* ------------------------------------------------------------------
     ! -------------------| GET TOYS BY CATEGORY | ---------------
     --------------------------------------------------------------------- */
-    app.get("/toys-by-category", async (req, res) => {
-      const category = req.query.category;
+    app.get("/toys-by-category/:category", async (req, res) => {
+      const category = req.params.category;
+      const page = parseInt(req.query.page) || 0;
+      const limit = parseInt(req.query.limit) || 6;
+      const skip = page * limit;
       const query = { category: category };
-      const result = await toysCollection.find(query).toArray();
+      const result = await toysCollection
+        .find(query)
+        .limit(limit)
+        .skip(skip)
+        .toArray();
       res.send(result);
     });
 
